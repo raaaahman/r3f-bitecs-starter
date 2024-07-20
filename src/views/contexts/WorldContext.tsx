@@ -17,19 +17,23 @@ export function WorldContextProvider({
   const world = createWorld({ time: { delta: 0, elapsed: 0 } });
 
   // Add the starting entities in our world
-  for (let z = 0; z < levelData.tiles.length; z++) {
-    for (let x = 0; x < levelData.tiles[z].length; x++) {
-      const eid = addEntity(world);
+  for (let i = 0; i < levelData.layers.length; i++) {
+    for (let z = 0; z < levelData.layers[i].tiles.length; z++) {
+      for (let x = 0; x < levelData.layers[i].tiles[z].length; x++) {
+        if (levelData.layers[i].tiles[z][x] < 0) continue;
 
-      addComponent(world, TileComponent, eid);
-      TileComponent.id[eid] = levelData.tiles[z][x];
+        const eid = addEntity(world);
 
-      addComponent(world, PositionComponent, eid);
-      PositionComponent.x[eid] = x - levelData.tiles[z].length / 2;
-      PositionComponent.z[eid] = z - levelData.tiles.length / 2;
+        addComponent(world, TileComponent, eid);
+        TileComponent.id[eid] = levelData.layers[i].tiles[z][x];
 
-      addComponent(world, RotationComponent, eid);
-      RotationComponent.z[eid] = levelData.rotations[z][x];
+        addComponent(world, PositionComponent, eid);
+        PositionComponent.x[eid] = x - levelData.layers[i].tiles[z].length / 2;
+        PositionComponent.z[eid] = z - levelData.layers[i].tiles.length / 2;
+
+        addComponent(world, RotationComponent, eid);
+        RotationComponent.z[eid] = levelData.layers[i].rotations[z][x];
+      }
     }
   }
 

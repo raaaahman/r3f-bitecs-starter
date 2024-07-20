@@ -10,21 +10,29 @@ import { GLTFLoader } from "three/examples/jsm/Addons.js";
 
 import { Clone } from "@react-three/drei";
 import { ComponentProps, useRef, useState } from "react";
+import { Vector2Tuple } from "three";
 
 export function Tilemap({ ...props }: ComponentProps<"group">) {
   const tiles = useQuery(tilesQuery);
 
   const tileset = useLoader(GLTFLoader, "/models/road_tileset.glb");
 
-  const commandsQueue = useRef<number[]>([]);
+  const commandsQueue = useRef<Vector2Tuple[]>([]);
 
   const [updated, forceUpdate] = useState(false);
 
   useFrame(() => {
     while (commandsQueue.current.length > 0) {
-      const eid = commandsQueue.current.pop() as number;
+      const position = commandsQueue.current.pop() as Vector2Tuple;
 
-      RotationComponent.z[eid] = RotationComponent.z[eid] + (1 % 4);
+      tiles.forEach((eid) => {
+        if (
+          PositionComponent.x[eid] === position[0] &&
+          PositionComponent.z[eid] === position[1]
+        ) {
+          RotationComponent.z[eid] = (RotationComponent.z[eid] + 1) % 4;
+        }
+      });
 
       if (commandsQueue.current.length === 0) forceUpdate(!updated);
     }
@@ -43,8 +51,17 @@ export function Tilemap({ ...props }: ComponentProps<"group">) {
           ]}
           rotation-z={(RotationComponent.z[eid] * Math.PI) / 2}
           onClick={() => {
-            if (!commandsQueue.current.includes(eid))
-              commandsQueue.current.push(eid);
+            if (
+              !commandsQueue.current.find(
+                (item: Vector2Tuple) =>
+                  item[0] === PositionComponent.x[eid] &&
+                  item[1] === PositionComponent.z[eid]
+              )
+            )
+              commandsQueue.current.push([
+                PositionComponent.x[eid],
+                PositionComponent.z[eid],
+              ]);
           }}
         />
       ))}

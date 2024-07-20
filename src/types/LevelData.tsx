@@ -1,4 +1,3 @@
 export type LevelData = {
-  tiles: number[][];
-  rotations: number[][];
+  layers: { tiles: number[][]; rotations: number[][] }[];
 };
