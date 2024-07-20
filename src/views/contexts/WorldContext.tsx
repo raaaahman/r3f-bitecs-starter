@@ -2,26 +2,35 @@ import { PropsWithChildren, createContext } from "react";
 import { WorldWithTime } from "../../types";
 import { addComponent, addEntity, createWorld } from "bitecs";
 import {
-  ColorComponent,
   PositionComponent,
-  VelocityComponent,
+  RotationComponent,
+  TileComponent,
 } from "../../logic/components";
+import { LevelData } from "../../types/LevelData";
 
 export const WorldContext = createContext<WorldWithTime | undefined>(undefined);
 
-export function WorldContextProvider({ children }: PropsWithChildren) {
+export function WorldContextProvider({
+  children,
+  levelData,
+}: PropsWithChildren<{ levelData: LevelData }>) {
   const world = createWorld({ time: { delta: 0, elapsed: 0 } });
 
   // Add the starting entities in our world
-  for (let i = 0; i < 32; i++) {
-    const eid = addEntity(world);
-    addComponent(world, PositionComponent, eid);
-    addComponent(world, VelocityComponent, eid);
-    addComponent(world, ColorComponent, eid);
-    // Set a random starting color
-    ColorComponent.r[eid] = Math.round(Math.random() * 255);
-    ColorComponent.g[eid] = Math.round(Math.random() * 255);
-    ColorComponent.b[eid] = Math.round(Math.random() * 255);
+  for (let z = 0; z < levelData.tiles.length; z++) {
+    for (let x = 0; x < levelData.tiles[z].length; x++) {
+      const eid = addEntity(world);
+
+      addComponent(world, TileComponent, eid);
+      TileComponent.id[eid] = levelData.tiles[z][x];
+
+      addComponent(world, PositionComponent, eid);
+      PositionComponent.x[eid] = x - levelData.tiles[z].length / 2;
+      PositionComponent.z[eid] = z - levelData.tiles.length / 2;
+
+      addComponent(world, RotationComponent, eid);
+      RotationComponent.z[eid] = levelData.rotations[z][x];
+    }
   }
 
   return (

@@ -1,10 +1,20 @@
-import { IWorld, defineQuery, enterQuery } from "bitecs";
-import { PositionComponent, VelocityComponent } from "../components";
+import { defineQuery } from "bitecs";
+import {
+  PositionComponent,
+  RotationComponent,
+  TileComponent,
+  VelocityComponent,
+} from "../components";
 
 export const movementQuery = defineQuery([
   PositionComponent,
   VelocityComponent,
 ]);
-export function enteredMovementQuery(world: IWorld) {
-  return enterQuery(movementQuery)(world);
-}
+
+export const displayQuery = defineQuery([PositionComponent]);
+
+export const tilesQuery = defineQuery([
+  PositionComponent,
+  RotationComponent,
+  TileComponent,
+]);
