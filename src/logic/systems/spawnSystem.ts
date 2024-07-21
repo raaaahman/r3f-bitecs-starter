@@ -29,7 +29,7 @@ export const spawnSystem = defineSystem((world: WorldWithTime) => {
       PositionComponent.z[eid] = PositionComponent.z[spawnId];
 
       addComponent(world, RotationComponent, eid);
-      RotationComponent.z[eid] = Math.floor(Math.random() * 4);
+      RotationComponent.y[eid] = Math.floor(Math.random() * 4);
 
       addComponent(world, ColorComponent, eid);
       ColorComponent.team[eid] = ColorComponent.team[spawnId];

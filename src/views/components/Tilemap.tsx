@@ -30,7 +30,7 @@ export function Tilemap({ ...props }: ComponentProps<"group">) {
           PositionComponent.x[eid] === position[0] &&
           PositionComponent.z[eid] === position[1]
         ) {
-          RotationComponent.z[eid] = (RotationComponent.z[eid] + 1) % 4;
+          RotationComponent.y[eid] = (RotationComponent.y[eid] + 1) % 4;
         }
       });
 
@@ -49,7 +49,7 @@ export function Tilemap({ ...props }: ComponentProps<"group">) {
             PositionComponent.y[eid],
             PositionComponent.z[eid],
           ]}
-          rotation-z={(RotationComponent.z[eid] * Math.PI) / 2}
+          rotation-z={(RotationComponent.y[eid] * Math.PI) / 2}
           onClick={() => {
             if (
               !commandsQueue.current.find(

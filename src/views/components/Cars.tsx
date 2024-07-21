@@ -7,6 +7,7 @@ import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { carsQuery as carsQuery } from "../../logic/queries";
 import { useWorld } from "../hooks/useWorld";
+import { RotationComponent } from "../../logic/components";
 
 const CARS = [
   "ambulance.glb",
@@ -63,6 +64,7 @@ export function Cars() {
         0,
         Math.floor(Math.random() * 4)
       );
+      obj.rotateY((RotationComponent.y[eid] * Math.PI) / 2);
 
       return obj;
     });

@@ -39,7 +39,7 @@ export function WorldContextProvider({
         PositionComponent.z[eid] = z;
 
         addComponent(world, RotationComponent, eid);
-        RotationComponent.z[eid] = levelData.layers[i].rotations[z][x];
+        RotationComponent.y[eid] = levelData.layers[i].rotations[z][x];
       }
     }
   }

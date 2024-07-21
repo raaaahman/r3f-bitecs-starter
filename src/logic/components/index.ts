@@ -6,9 +6,11 @@ export const PositionComponent = defineComponent(Vector3);
 
 export const VelocityComponent = defineComponent(Vector3);
 
-export const RotationComponent = defineComponent({ z: Types.i8 });
+export const RotationComponent = defineComponent({ y: Types.i8 });
 
 export const TileComponent = defineComponent({ id: Types.ui8 });
+
+export const EdgeComponent = defineComponent({ edges: Types.ui8 });
 
 export const ColorComponent = defineComponent({ team: Types.ui8 });
 
