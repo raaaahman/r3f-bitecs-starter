@@ -9,6 +9,8 @@ import {
 } from "../components";
 import { WorldWithTime } from "../../types";
 
+const BASE_SPEED = 0.5;
+
 export const spawnSystem = defineSystem((world: WorldWithTime) => {
   const spawnPoints = spawnQuery(world);
 
@@ -35,6 +37,10 @@ export const spawnSystem = defineSystem((world: WorldWithTime) => {
       ColorComponent.team[eid] = ColorComponent.team[spawnId];
 
       addComponent(world, VelocityComponent, eid);
+      VelocityComponent.x[eid] =
+        Math.sin((Math.PI * RotationComponent.y[eid]) / 2) * BASE_SPEED;
+      VelocityComponent.z[eid] =
+        Math.cos((Math.PI * RotationComponent.y[eid]) / 2) * BASE_SPEED;
 
       SpawnComponent.cooldown[spawnId] += SpawnComponent.delay[spawnId];
     }

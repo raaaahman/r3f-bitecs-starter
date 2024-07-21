@@ -7,7 +7,7 @@ import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { carsQuery as carsQuery } from "../../logic/queries";
 import { useWorld } from "../hooks/useWorld";
-import { RotationComponent } from "../../logic/components";
+import { PositionComponent, RotationComponent } from "../../logic/components";
 
 const CARS = [
   "ambulance.glb",
@@ -37,8 +37,6 @@ export function Cars() {
     GLTFLoader,
     CARS.map((filename) => "/models/cars/" + filename)
   );
-
-  console.log(cars);
 
   const world = useWorld();
 
@@ -70,6 +68,18 @@ export function Cars() {
     });
 
     if (newCars.length > 0) carsRef.current?.add(...newCars);
+
+    const currentCars = carsQuery(world);
+
+    currentCars.forEach((eid) =>
+      carsRef.current?.children
+        .find((car) => parseInt(car.name) === eid)
+        ?.position.set(
+          PositionComponent.x[eid],
+          PositionComponent.y[eid],
+          PositionComponent.z[eid]
+        )
+    );
   });
 
   return <group ref={carsRef} />;

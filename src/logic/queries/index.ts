@@ -10,6 +10,7 @@ import {
 
 export const movementQuery = defineQuery([
   PositionComponent,
+  RotationComponent,
   VelocityComponent,
 ]);
 

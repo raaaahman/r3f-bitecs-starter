@@ -12,6 +12,7 @@ import { LevelData } from "../../types/LevelData";
 import { useFrame } from "@react-three/fiber";
 import { timeSystem } from "../../logic/systems/timeSystem";
 import { spawnSystem } from "../../logic/systems/spawnSystem";
+import { movementSystem } from "../../logic/systems/movementSystem";
 
 export const WorldContext = createContext<WorldWithTime | undefined>(undefined);
 
@@ -60,7 +61,7 @@ export function WorldContextProvider({
     SpawnComponent.cooldown[eid] = 0;
   }
 
-  const pipeline = pipe(timeSystem, spawnSystem);
+  const pipeline = pipe(timeSystem, spawnSystem, movementSystem);
 
   useFrame(() => {
     pipeline(world);
