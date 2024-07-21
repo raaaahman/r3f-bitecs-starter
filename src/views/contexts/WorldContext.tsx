@@ -1,12 +1,17 @@
 import { PropsWithChildren, createContext } from "react";
 import { WorldWithTime } from "../../types";
-import { addComponent, addEntity, createWorld } from "bitecs";
+import { addComponent, addEntity, createWorld, pipe } from "bitecs";
 import {
+  ColorComponent,
   PositionComponent,
   RotationComponent,
+  SpawnComponent,
   TileComponent,
 } from "../../logic/components";
 import { LevelData } from "../../types/LevelData";
+import { useFrame } from "@react-three/fiber";
+import { timeSystem } from "../../logic/systems/timeSystem";
+import { spawnSystem } from "../../logic/systems/spawnSystem";
 
 export const WorldContext = createContext<WorldWithTime | undefined>(undefined);
 
@@ -14,7 +19,9 @@ export function WorldContextProvider({
   children,
   levelData,
 }: PropsWithChildren<{ levelData: LevelData }>) {
-  const world = createWorld({ time: { delta: 0, elapsed: 0 } });
+  const world = createWorld({
+    time: { delta: 0, elapsed: 0, then: performance.now() },
+  });
 
   // Add the starting entities in our world
   for (let i = 0; i < levelData.layers.length; i++) {
@@ -28,14 +35,36 @@ export function WorldContextProvider({
         TileComponent.id[eid] = levelData.layers[i].tiles[z][x];
 
         addComponent(world, PositionComponent, eid);
-        PositionComponent.x[eid] = x - levelData.layers[i].tiles[z].length / 2;
-        PositionComponent.z[eid] = z - levelData.layers[i].tiles.length / 2;
+        PositionComponent.x[eid] = x;
+        PositionComponent.z[eid] = z;
 
         addComponent(world, RotationComponent, eid);
         RotationComponent.z[eid] = levelData.layers[i].rotations[z][x];
       }
     }
   }
+
+  for (let i = 0; i < levelData.groups.length; i++) {
+    const eid = addEntity(world);
+
+    addComponent(world, PositionComponent, eid);
+    PositionComponent.x[eid] = levelData.groups[i].start[0];
+    PositionComponent.z[eid] = levelData.groups[i].start[1];
+
+    addComponent(world, ColorComponent, eid);
+    ColorComponent.team[eid] = levelData.groups[i].color;
+
+    addComponent(world, SpawnComponent, eid);
+    SpawnComponent.delay[eid] = levelData.groups[i].delay;
+    SpawnComponent.max[eid] = levelData.groups[i].max;
+    SpawnComponent.cooldown[eid] = 0;
+  }
+
+  const pipeline = pipe(timeSystem, spawnSystem);
+
+  useFrame(() => {
+    pipeline(world);
+  });
 
   return (
     <WorldContext.Provider value={world}>{children}</WorldContext.Provider>

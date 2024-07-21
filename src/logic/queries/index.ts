@@ -1,7 +1,9 @@
-import { defineQuery } from "bitecs";
+import { defineQuery, enterQuery, exitQuery } from "bitecs";
 import {
+  ColorComponent,
   PositionComponent,
   RotationComponent,
+  SpawnComponent,
   TileComponent,
   VelocityComponent,
 } from "../components";
@@ -18,3 +20,21 @@ export const tilesQuery = defineQuery([
   RotationComponent,
   TileComponent,
 ]);
+
+export const spawnQuery = defineQuery([
+  PositionComponent,
+  ColorComponent,
+  SpawnComponent,
+]);
+
+export const enterSpawnQuery = enterQuery(spawnQuery);
+
+export const carsQuery = defineQuery([
+  PositionComponent,
+  RotationComponent,
+  ColorComponent,
+]);
+
+export const enterCarsQuery = enterQuery(carsQuery);
+
+export const exitCarsQuery = exitQuery(carsQuery);
