@@ -1,9 +1,11 @@
 import { defineQuery, enterQuery, exitQuery } from "bitecs";
 import {
   ColorComponent,
+  GraphComponent,
   PositionComponent,
   RotationComponent,
   SpawnComponent,
+  SpeedComponent,
   TileComponent,
   VelocityComponent,
 } from "../components";
@@ -12,15 +14,16 @@ export const movementQuery = defineQuery([
   PositionComponent,
   RotationComponent,
   VelocityComponent,
+  SpeedComponent,
 ]);
-
-export const displayQuery = defineQuery([PositionComponent]);
 
 export const tilesQuery = defineQuery([
   PositionComponent,
   RotationComponent,
   TileComponent,
 ]);
+
+export const graphQuery = defineQuery([PositionComponent, GraphComponent]);
 
 export const spawnQuery = defineQuery([
   PositionComponent,

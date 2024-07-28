@@ -3,6 +3,7 @@ import { WorldWithTime } from "../../types";
 import { addComponent, addEntity, createWorld, pipe } from "bitecs";
 import {
   ColorComponent,
+  GraphComponent,
   PositionComponent,
   RotationComponent,
   SpawnComponent,
@@ -13,6 +14,7 @@ import { useFrame } from "@react-three/fiber";
 import { timeSystem } from "../../logic/systems/timeSystem";
 import { spawnSystem } from "../../logic/systems/spawnSystem";
 import { movementSystem } from "../../logic/systems/movementSystem";
+import { pathfindingSystem } from "../../logic/systems/pathFindingSystem";
 
 export const WorldContext = createContext<WorldWithTime | undefined>(undefined);
 
@@ -41,6 +43,11 @@ export function WorldContextProvider({
 
         addComponent(world, RotationComponent, eid);
         RotationComponent.y[eid] = levelData.layers[i].rotations[z][x];
+
+        if (i === 0) {
+          addComponent(world, GraphComponent, eid);
+          GraphComponent.edges[eid] = levelData.edges[z][x];
+        }
       }
     }
   }
@@ -61,7 +68,12 @@ export function WorldContextProvider({
     SpawnComponent.cooldown[eid] = 0;
   }
 
-  const pipeline = pipe(timeSystem, spawnSystem, movementSystem);
+  const pipeline = pipe(
+    timeSystem,
+    spawnSystem,
+    pathfindingSystem,
+    movementSystem
+  );
 
   useFrame(() => {
     pipeline(world);
