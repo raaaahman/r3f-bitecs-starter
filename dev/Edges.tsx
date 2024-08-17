@@ -1,7 +1,8 @@
 import React from "react";
 import { useQuery } from "../src/views/hooks/useQuery";
 import { graphQuery } from "../src/logic/queries";
-import { GraphComponent, PositionComponent } from "../src/logic/components";
+import { PositionComponent } from "../src/logic/components";
+import { GraphComponent } from "../src/logic/components/GraphComponent";
 import { Box } from "@react-three/drei";
 
 export default function Edges() {

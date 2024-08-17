@@ -15,8 +15,6 @@ export const RotationComponent = defineComponent({ y: Types.i8 });
 
 export const TileComponent = defineComponent({ id: Types.ui8 });
 
-export const GraphComponent = defineComponent({ edges: Types.ui8 });
-
 export const ColorComponent = defineComponent({ team: Types.ui8 });
 
 export const SpawnComponent = defineComponent({
