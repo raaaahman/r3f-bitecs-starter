@@ -1,10 +1,10 @@
 import { useFrame, useLoader } from "@react-three/fiber";
 import {
-  GraphComponent,
   PositionComponent,
   RotationComponent,
   TileComponent,
 } from "../../logic/components";
+import { GraphComponent } from "../../logic/components/GraphComponent";
 import { graphQuery, tilesQuery } from "../../logic/queries";
 import { useQuery } from "../hooks/useQuery";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
@@ -12,8 +12,11 @@ import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { Clone } from "@react-three/drei";
 import { ComponentProps, lazy, useRef, useState } from "react";
 import { Vector2Tuple } from "three";
+import { pathfindingSystem } from "../../logic/systems/pathfindingSystem";
+import { useWorld } from "../hooks/useWorld";
 
 const Edges = lazy(() => import("../../../dev/Edges"));
+const FlowMap = lazy(() => import("../../../dev/FlowMap"));
 
 export function Tilemap({ ...props }: ComponentProps<"group">) {
   const tiles = useQuery(tilesQuery);
@@ -22,6 +25,8 @@ export function Tilemap({ ...props }: ComponentProps<"group">) {
   const tileset = useLoader(GLTFLoader, "/models/road_tileset.glb");
 
   const commandsQueue = useRef<Vector2Tuple[]>([]);
+
+  const world = useWorld();
 
   const [updated, forceUpdate] = useState(false);
 
@@ -50,13 +55,17 @@ export function Tilemap({ ...props }: ComponentProps<"group">) {
           (GraphComponent.edges[edgeId] >> 1) | (rightBit << 3);
       }
 
-      if (commandsQueue.current.length === 0) forceUpdate(!updated);
+      if (commandsQueue.current.length === 0) {
+        pathfindingSystem(world);
+        forceUpdate(!updated);
+      }
     }
   });
 
   return (
     <>
       {process.env.NODE_ENV === "development" ? <Edges /> : null}
+      {process.env.NODE_ENV === "development" ? <FlowMap /> : null}
 
       <group {...props}>
         {tiles.map((eid) => (
