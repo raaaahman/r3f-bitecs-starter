@@ -1,12 +1,24 @@
 import { defineSystem } from "bitecs";
 import { movementQuery } from "../queries";
-import { PositionComponent, VelocityComponent } from "../components";
-import { WorldWithTime } from "../../types";
+import {
+  PositionComponent,
+  RotationComponent,
+  SpeedComponent,
+  VelocityComponent,
+} from "../components";
+import { CustomWorld } from "../../types";
 
-export const movementSystem = defineSystem((world: WorldWithTime) => {
+export const movementSystem = defineSystem((world: CustomWorld) => {
   const movingEntities = movementQuery(world);
 
   movingEntities.forEach((eid) => {
+    VelocityComponent.x[eid] =
+      Math.sin((Math.PI * RotationComponent.y[eid]) / 2) *
+      SpeedComponent.maxSpeed[eid];
+    VelocityComponent.z[eid] =
+      Math.cos((Math.PI * RotationComponent.y[eid]) / 2) *
+      SpeedComponent.maxSpeed[eid];
+
     PositionComponent.x[eid] +=
       (VelocityComponent.x[eid] * world.time.delta) / 1000;
     PositionComponent.y[eid] +=
