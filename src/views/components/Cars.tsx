@@ -72,13 +72,17 @@ export function Cars() {
     const currentCars = carsQuery(world);
 
     currentCars.forEach((eid) =>
-      carsRef.current?.children
-        .find((car) => parseInt(car.name) === eid)
-        ?.position.set(
+      {
+        const car = carsRef.current?.children.find(
+          (mesh) => parseInt(mesh.name) === eid
+        );
+        car?.position.set(
           PositionComponent.x[eid],
           PositionComponent.y[eid],
           PositionComponent.z[eid]
-        )
+        );
+        car?.rotation.set(0, (RotationComponent.y[eid] * Math.PI) / 2, 0);
+      }
     );
   });
 
