@@ -1,7 +1,7 @@
-import { defineSystem } from "bitecs";
-import { WorldWithTime } from "../../types";
+import { defineSystem, IWorld } from "bitecs";
+import { WithTime } from "../../types";
 
-export const timeSystem = defineSystem((world: WorldWithTime) => {
+export const timeSystem = defineSystem((world: WithTime<IWorld>) => {
   const { time } = world;
   const now = performance.now();
   const delta = now - time.then;

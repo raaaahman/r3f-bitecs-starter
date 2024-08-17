@@ -1,17 +1,22 @@
-import { addComponent, addEntity, defineSystem, removeEntity } from "bitecs";
+import {
+  addComponent,
+  addEntity,
+  defineSystem,
+  IWorld,
+  removeEntity,
+} from "bitecs";
 import { carsQuery, spawnQuery } from "../queries";
 import {
   ColorComponent,
   PositionComponent,
   RotationComponent,
   SpawnComponent,
+  SpeedComponent,
   VelocityComponent,
 } from "../components";
-import { WorldWithTime } from "../../types";
+import { WithTime } from "../../types";
 
-const BASE_SPEED = 0.5;
-
-export const spawnSystem = defineSystem((world: WorldWithTime) => {
+export const spawnSystem = defineSystem((world: WithTime<IWorld>) => {
   const spawnPoints = spawnQuery(world);
 
   for (const spawnId of spawnPoints) {
@@ -37,10 +42,10 @@ export const spawnSystem = defineSystem((world: WorldWithTime) => {
       ColorComponent.team[eid] = ColorComponent.team[spawnId];
 
       addComponent(world, VelocityComponent, eid);
-      VelocityComponent.x[eid] =
-        Math.sin((Math.PI * RotationComponent.y[eid]) / 2) * BASE_SPEED;
-      VelocityComponent.z[eid] =
-        Math.cos((Math.PI * RotationComponent.y[eid]) / 2) * BASE_SPEED;
+
+      addComponent(world, SpeedComponent, eid);
+      SpeedComponent.maxSpeed[eid] = 0.5;
+      SpeedComponent.acceleration[eid] = 0.1;
 
       SpawnComponent.cooldown[spawnId] += SpawnComponent.delay[spawnId];
     }
