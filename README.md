@@ -1,5 +1,7 @@
 # React ThreeFiber + bitECS Starter (TypeScript)
 
+**Update**: Check the [koota](https://github.com/pmndrs/koota) library, an Entity Component System library for React Three Fiber, maintained by the Poimandres Collective.
+
 This project is a demo about how to integrate a [bitECS](https://github.com/NateTheGreatt/bitECS) world with a [React Three Fiber](https://github.com/pmndrs/react-three-fiber) rendering to display your simulations (or games) inside a web browser. This can be used as a starter project as well. Be sure to read both documentations!
 
 It is powered by Vite, so the usual Vite commands apply:
